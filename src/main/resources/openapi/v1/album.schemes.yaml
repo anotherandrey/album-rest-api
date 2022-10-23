@@ -1,0 +1,35 @@
+schemes:
+
+  ImageDtoArray:
+    type: object
+    properties:
+
+      items:
+        type: array
+        items:
+          $ref: '../album.schemes.yaml#/schemes/ImageDto'
+      required:
+        - items
+
+  ImageDto:
+    type: object
+    properties:
+
+      id:
+        type: integer
+        format: int64
+      filename:
+        type: string
+      contentType:
+        type: string
+      contentLength:
+        type: integer
+        format: int64
+      createdAt:
+        type: string
+    required:
+      - id
+      - filename
+      - contentType
+      - contentLength
+      - createdAt

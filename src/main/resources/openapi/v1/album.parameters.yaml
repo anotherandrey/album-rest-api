@@ -1,0 +1,60 @@
+parameters:
+
+  filename:
+    in: header
+    name: X-Filename
+    schema:
+      type: string
+    required: true
+
+  contentType:
+    in: header
+    name: Content-Type
+    schema:
+      type: string
+    required: true
+
+  page:
+    in: query
+    name: page
+    schema:
+      type: integer
+      default: 0
+      minimum: 0
+    required: true
+
+  pageSize:
+    in: query
+    name: pageSize
+    schema:
+      type: integer
+      default: 1
+      minimum: 1
+    required: true
+
+  sortBy:
+    in: query
+    name: sortBy
+    schema:
+      type: string
+      enum:
+        - createdAt
+    required: true
+
+  sortDirection:
+    in: query
+    name: sortDirection
+    schema:
+      type: string
+      enum:
+        - asc
+        - desc
+    required: true
+
+  id:
+    in: path
+    name: id
+    schema:
+      type: integer
+      format: int64
+    required: true
