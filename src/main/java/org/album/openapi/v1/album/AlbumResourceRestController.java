@@ -1,6 +1,6 @@
 package org.album.openapi.v1.album;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.album.service.AlbumCommonService;
 import org.album.service.AlbumCommonService.Response;
 import org.springframework.core.io.Resource;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @since 1.0-SNAPSHOT
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class AlbumResourceRestController implements AlbumResourceRestControllerApi {
 
-  private AlbumCommonService commonService;
+  private final AlbumCommonService commonService;
 
   @Override
   public ResponseEntity<Resource> getResource(Long id) {

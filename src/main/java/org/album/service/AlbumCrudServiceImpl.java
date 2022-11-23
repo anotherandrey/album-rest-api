@@ -1,6 +1,6 @@
 package org.album.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.album.exception.ImageNotFoundException;
 import org.album.image.*;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @since 1.0-SNAPSHOT
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AlbumCrudServiceImpl implements AlbumCrudService {

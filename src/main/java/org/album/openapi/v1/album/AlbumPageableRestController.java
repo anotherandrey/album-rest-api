@@ -1,8 +1,7 @@
 package org.album.openapi.v1.album;
 
-import java.util.*;
-import lombok.AllArgsConstructor;
-import org.album.image.Image;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.album.service.AlbumPageableService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @since 1.0-SNAPSHOT
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class AlbumPageableRestController implements AlbumPageableRestControllerApi {
 

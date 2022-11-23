@@ -23,7 +23,7 @@ public class AlbumConfiguration {
   public WebMvcConfigurer webMvcConfigurer() {
     return new WebMvcConfigurer() {
 
-      private final static String API_V1_MAPPING = "/api/v1/album/**";
+      private final static String API_V1_MAPPING = "/api/v1/images/**";
 
       @Override
       public void addCorsMappings(CorsRegistry corsRegistry) {

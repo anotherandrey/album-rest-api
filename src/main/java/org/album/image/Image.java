@@ -9,7 +9,6 @@ import lombok.*;
  */
 @Entity
 @SequenceGenerator(name="image_id_sequence", allocationSize=1)
-@AllArgsConstructor
 @Builder
 @Getter
 @Setter
@@ -35,5 +34,13 @@ public class Image {
   private LocalDateTime createdAt = LocalDateTime.now();
 
   public Image() {
+  }
+
+  public Image(Long id, String filename, String contentType, Long contentLength, LocalDateTime createdAt) {
+    this.id = id;
+    this.filename = filename;
+    this.contentType = contentType;
+    this.contentLength = contentLength;
+    this.createdAt = createdAt;
   }
 }

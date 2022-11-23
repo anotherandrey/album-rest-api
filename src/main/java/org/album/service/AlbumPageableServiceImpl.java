@@ -1,11 +1,10 @@
 package org.album.service;
 
 import jakarta.validation.constraints.*;
-import java.util.List;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
-import org.album.service.validation.SortDirectionParameter;
+import lombok.RequiredArgsConstructor;
 import org.album.image.*;
+import org.album.service.validation.SortDirectionParameter;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * @since 1.0-SNAPSHOT
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Validated
 public class AlbumPageableServiceImpl implements AlbumPageableService {

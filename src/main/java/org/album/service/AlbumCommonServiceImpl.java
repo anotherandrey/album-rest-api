@@ -4,7 +4,7 @@ import static com.google.common.io.Files.*;
 import static org.springframework.util.Base64Utils.encodeToString;
 
 import java.io.*;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.album.AlbumConfiguration;
 import org.album.exception.*;
 import org.album.image.Image;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @since 1.0-SNAPSHOT
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class AlbumCommonServiceImpl implements AlbumCommonService {
 
