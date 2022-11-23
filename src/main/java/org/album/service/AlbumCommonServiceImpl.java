@@ -78,9 +78,11 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
     checkContentType(contentType);
 
     try (InputStream inputStream = resource.getInputStream()) {
-      File file = getFile(filename);
 
-      createParentDirs(file);
+      String parentDirs = configuration.getParentDirs();
+      createParentDirs(new File(parentDirs));
+
+      File file = getFile(filename);
 
       byte[] allBytes = inputStream.readAllBytes();
 
