@@ -10,7 +10,6 @@ store _*.jpeg's_, _*.png's_, or another content.
    - `album.content-types`, to specify allowed content types.
 2. Then you should specify *db* configuration (*postgresql* only).
 3. Run `./gradlew bootRun`, to start.
-4. After all, when you run the application, you can run `sh seeds.sh`, to create start data.
 
 ### How to run with Docker:
 1. Firstly, specify (*application.properties*):
