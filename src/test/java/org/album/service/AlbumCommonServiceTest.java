@@ -44,7 +44,7 @@ class AlbumCommonServiceTest {
   @Test
   void getResource_shouldGetResource() throws IOException {
     Image image = buildImage();
-    Mockito.when(crudService.getImage(image.getId())).thenReturn(image);
+    Mockito.when(crudService.getImageById(image.getId())).thenReturn(image);
 
     byte[] bytes = {42, 42, 42, 42, 42, 42};
     File file = new File(image.getFilename());
@@ -59,20 +59,20 @@ class AlbumCommonServiceTest {
   @Test
   void getResource_shouldThrowsResourceNotExistsException() {
     Image image = buildImage();
-    Mockito.when(crudService.getImage(image.getId())).thenReturn(image);
+    Mockito.when(crudService.getImageById(image.getId())).thenReturn(image);
     Assertions.assertThatThrownBy(() -> commonService.getResource(image.getId())).isInstanceOf(ResourceNotExistsException.class);
   }
 
   @Test
   void getResource_shouldThrowsImageNotFoundException() {
-    Mockito.when(crudService.getImage(42L)).thenThrow(ImageNotFoundException.class);
+    Mockito.when(crudService.getImageById(42L)).thenThrow(ImageNotFoundException.class);
     Assertions.assertThatThrownBy(() -> commonService.getResource(42L)).isInstanceOf(ImageNotFoundException.class);
   }
 
   @Test
   void getBase46_shouldGetBase64() throws IOException {
     Image image = buildImage();
-    Mockito.when(crudService.getImage(image.getId())).thenReturn(image);
+    Mockito.when(crudService.getImageById(image.getId())).thenReturn(image);
 
     byte[] bytes = {42, 42, 42, 42, 42, 42};
     File file = new File(image.getFilename());
@@ -87,13 +87,13 @@ class AlbumCommonServiceTest {
   @Test
   void getBase64_shouldThrowsResourceNotExistsException() {
     Image image = buildImage();
-    Mockito.when(crudService.getImage(image.getId())).thenReturn(image);
+    Mockito.when(crudService.getImageById(image.getId())).thenReturn(image);
     Assertions.assertThatThrownBy(() -> commonService.getResource(image.getId())).isInstanceOf(ResourceNotExistsException.class);
   }
 
   @Test
   void getBase64_shouldThrowsImageNotFoundException() {
-    Mockito.when(crudService.getImage(42L)).thenThrow(ImageNotFoundException.class);
+    Mockito.when(crudService.getImageById(42L)).thenThrow(ImageNotFoundException.class);
     Assertions.assertThatThrownBy(() -> commonService.getResource(42L)).isInstanceOf(ImageNotFoundException.class);
   }
 
@@ -124,6 +124,38 @@ class AlbumCommonServiceTest {
   @Test
   void create_shouldThrowsNotSupportedContentTypeException() {
     Assertions.assertThatThrownBy(() -> commonService.create(RandomStringUtils.random(42), RandomStringUtils.random(42), null)).isInstanceOf(NotSupportedContentTypeException.class);
+  }
+
+  @Test
+  void delete_shouldNotDeleteFileIfFilenameIsUsed() throws IOException {
+    Image image = buildImage();
+    Mockito.when(crudService.deleteImageById(image.getId())).thenReturn(image);
+    Mockito.when(crudService.countImagesByFilename(image.getFilename())).thenReturn(42);
+
+    byte[] bytes = {42, 42, 42, 42, 42, 42};
+    File file = new File(image.getFilename());
+    write(bytes, file);
+
+    commonService.delete(image.getId());
+
+    Assertions.assertThat(file.exists()).isTrue();
+
+    deleteFile(file);
+  }
+
+  @Test
+  void delete_shouldDeleteFileIfFilenameIsUnused() throws IOException {
+    Image image = buildImage();
+    Mockito.when(crudService.deleteImageById(image.getId())).thenReturn(image);
+    Mockito.when(crudService.countImagesByFilename(image.getFilename())).thenReturn(0);
+
+    byte[] bytes = {42, 42, 42, 42, 42, 42};
+    File file = new File(image.getFilename());
+    write(bytes, file);
+
+    commonService.delete(image.getId());
+
+    Assertions.assertThat(file.exists()).isFalse();
   }
 
   private Image buildImage() {

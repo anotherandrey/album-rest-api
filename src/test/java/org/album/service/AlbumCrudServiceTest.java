@@ -31,7 +31,7 @@ class AlbumCrudServiceTest {
 
   @Test
   void getImage_shouldThrowsImageNotFoundException() {
-    Assertions.assertThatThrownBy(() -> crudService.getImage(42L)).isInstanceOf(ImageNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> crudService.getImageById(42L)).isInstanceOf(ImageNotFoundException.class);
   }
 
   @Test

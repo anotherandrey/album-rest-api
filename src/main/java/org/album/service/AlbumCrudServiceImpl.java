@@ -19,8 +19,14 @@ public class AlbumCrudServiceImpl implements AlbumCrudService {
 
   @Transactional(readOnly = true)
   @Override
-  public Image getImage(long id) {
+  public Image getImageById(long id) {
     return repository.findById(id).orElseThrow(() -> new ImageNotFoundException(id));
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public int countImagesByFilename(String filename) {
+    return repository.countByFilename(filename);
   }
 
   @Transactional
@@ -38,8 +44,12 @@ public class AlbumCrudServiceImpl implements AlbumCrudService {
 
   @Transactional
   @Override
-  public void deleteImage(Image image) {
+  public Image deleteImageById(long id) {
+    Image image = getImageById(id);
+
     log.info("delete image {}", image);
     repository.delete(image);
+
+    return image;
   }
 }
