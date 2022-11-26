@@ -28,22 +28,12 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   public Response<Resource> getResource(long id) {
     Image image = crudService.getImage(id);
 
-    String filename = image.getFilename();
-
-    File file = getFile(filename);
-    if (!file.exists()) {
-      throw new FileNotExistsException(file);
+    Resource resource = getPathResource(image.getFilename());
+    if (!resource.exists()) {
+      throw new ResourceNotExistsException(image.getFilename());
     }
 
-    Resource body = new PathResource(file.getPath());
-
-    try {
-      image.setContentLength(body.contentLength());
-    } catch (IOException e) {
-      throw new AlbumCommonServiceException(e);
-    }
-
-    return new Response<>(image, body);
+    return new Response<>(image, resource);
   }
 
   @Transactional(readOnly = true)
@@ -51,20 +41,15 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   public Response<String> getBase64(long id) {
     Image image = crudService.getImage(id);
 
-    String filename = image.getFilename();
-
-    File file = getFile(filename);
-    if (!file.exists()) {
-      throw new FileNotExistsException(file);
+    Resource resource = getPathResource(image.getFilename());
+    if (!resource.exists()) {
+      throw new ResourceNotExistsException(image.getFilename());
     }
 
-    try (FileInputStream inputStream = new FileInputStream(file)) {
+    try (InputStream inputStream = resource.getInputStream()) {
       byte[] allBytes = inputStream.readAllBytes();
 
-      image.setContentLength((long) allBytes.length);
-
       return new Response<>(image, encodeToString(allBytes));
-
     } catch (IOException e) {
       throw new AlbumCommonServiceException(e);
     }
@@ -73,23 +58,17 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   @Transactional
   @Override
   public Image create(String filename, String contentType, Resource resource) {
-    assert !StringUtils.isEmpty(filename) && !StringUtils.isEmpty(contentType);
-
     checkContentType(contentType);
-
     try (InputStream inputStream = resource.getInputStream()) {
+      byte[] allBytes = inputStream.readAllBytes();
 
       String parentDirs = configuration.getParentDirs();
       createParentDirs(new File(parentDirs));
 
-      File file = getFile(filename);
-
-      byte[] allBytes = inputStream.readAllBytes();
-
+      File file = !StringUtils.isBlank(parentDirs) ? new File(parentDirs + "/" + filename) : new File(filename);
       write(allBytes, file);
 
-      return crudService.createImage(filename, contentType, resource.contentLength());
-
+      return crudService.createImage(filename, contentType, allBytes.length);
     } catch (IOException e) {
       throw new AlbumCommonServiceException(e);
     }
@@ -103,9 +82,10 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
     crudService.deleteImage(image);
   }
 
-  private File getFile(String filename) {
+  private PathResource getPathResource(String filename) {
     String parentDirs = configuration.getParentDirs();
-    return !StringUtils.isBlank(parentDirs) ? new File(parentDirs + "/" + filename) : new File(filename);
+    File file = !StringUtils.isBlank(parentDirs) ? new File(parentDirs + "/" + filename) : new File(filename);
+    return new PathResource(file.getPath());
   }
 
   private void checkContentType(String contentType) {

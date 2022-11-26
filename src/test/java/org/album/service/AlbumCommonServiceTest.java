@@ -57,10 +57,10 @@ class AlbumCommonServiceTest {
   }
 
   @Test
-  void getResource_shouldThrowsFileNotExistsException() {
+  void getResource_shouldThrowsResourceNotExistsException() {
     Image image = buildImage();
     Mockito.when(crudService.getImage(image.getId())).thenReturn(image);
-    Assertions.assertThatThrownBy(() -> commonService.getResource(image.getId())).isInstanceOf(FileNotExistsException.class);
+    Assertions.assertThatThrownBy(() -> commonService.getResource(image.getId())).isInstanceOf(ResourceNotExistsException.class);
   }
 
   @Test
@@ -85,10 +85,10 @@ class AlbumCommonServiceTest {
   }
 
   @Test
-  void getBase64_shouldThrowsFileNotExistsException() {
+  void getBase64_shouldThrowsResourceNotExistsException() {
     Image image = buildImage();
     Mockito.when(crudService.getImage(image.getId())).thenReturn(image);
-    Assertions.assertThatThrownBy(() -> commonService.getResource(image.getId())).isInstanceOf(FileNotExistsException.class);
+    Assertions.assertThatThrownBy(() -> commonService.getResource(image.getId())).isInstanceOf(ResourceNotExistsException.class);
   }
 
   @Test
