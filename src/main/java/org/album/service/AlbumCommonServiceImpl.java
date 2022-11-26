@@ -103,11 +103,12 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
     crudService.deleteImage(image);
   }
 
-  protected File getFile(String filename) {
-    return new File(configuration.getParentDirs() + "/" + filename);
+  private File getFile(String filename) {
+    String parentDirs = configuration.getParentDirs();
+    return !StringUtils.isBlank(parentDirs) ? new File(parentDirs + "/" + filename) : new File(filename);
   }
 
-  protected void checkContentType(String contentType) {
+  private void checkContentType(String contentType) {
     boolean isNotAllowed = !StringUtils.equalsAny(contentType, configuration.getAllowedContentTypes());
     if (isNotAllowed) {
       throw new NotAllowedContentTypeException(contentType);
