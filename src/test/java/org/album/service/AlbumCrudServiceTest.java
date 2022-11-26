@@ -36,13 +36,18 @@ class AlbumCrudServiceTest {
 
   @Test
   void createImage_shouldCreateImage() {
-    Image image = crudService.createImage(RandomStringUtils.random(42), RandomStringUtils.random(42), 42L);
-    Mockito.when(repository.save(Mockito.any(Image.class))).thenReturn(image);
+    Image expected = Image.builder()
+        .id(42L).filename(RandomStringUtils.random(42)).contentType(RandomStringUtils.random(42)).contentLength(42L)
+        .build();
 
-    Assertions.assertThat(image.getId()).isNotNull();
-    Assertions.assertThat(image.getFilename()).isEqualTo(image.getFilename());
-    Assertions.assertThat(image.getContentType()).isEqualTo(image.getContentType());
-    Assertions.assertThat(image.getContentLength()).isEqualTo(image.getContentLength());
-    Assertions.assertThat(image.getCreatedAt()).isNotNull();
+    Mockito.when(repository.save(Mockito.any(Image.class))).thenReturn(expected);
+
+    Image image = crudService.createImage(expected.getFilename(), expected.getContentType(), expected.getContentLength());
+
+    Assertions.assertThat(image.getId()).isEqualTo(expected.getId());
+    Assertions.assertThat(image.getFilename()).isEqualTo(expected.getFilename());
+    Assertions.assertThat(image.getContentType()).isEqualTo(expected.getContentType());
+    Assertions.assertThat(image.getContentLength()).isEqualTo(expected.getContentLength());
+    Assertions.assertThat(image.getCreatedAt()).isEqualTo(image.getCreatedAt());
   }
 }
