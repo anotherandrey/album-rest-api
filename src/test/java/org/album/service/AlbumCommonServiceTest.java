@@ -108,7 +108,7 @@ class AlbumCommonServiceTest {
     Resource mockResource = Mockito.mock(Resource.class);
     Mockito.when(mockResource.getInputStream()).thenReturn(mockInputStream);
 
-    Mockito.when(configuration.getAllowedContentTypes()).thenReturn(new String[]{image.getContentType()});
+    Mockito.when(configuration.getContentTypes()).thenReturn(new String[]{image.getContentType()});
     Mockito.when(crudService.createImage(Mockito.anyString(), Mockito.anyString(), Mockito.any(Long.class))).thenReturn(image);
 
     Assertions.assertThat(commonService.create(image.getFilename(), image.getContentType(), mockResource)).isEqualTo(image);
@@ -122,8 +122,8 @@ class AlbumCommonServiceTest {
   }
 
   @Test
-  void create_shouldThrowsNotAllowedContentTypeExceptions() {
-    Assertions.assertThatThrownBy(() -> commonService.create(RandomStringUtils.random(42), RandomStringUtils.random(42), null)).isInstanceOf(NotAllowedContentTypeException.class);
+  void create_shouldThrowsNotSupportedContentTypeException() {
+    Assertions.assertThatThrownBy(() -> commonService.create(RandomStringUtils.random(42), RandomStringUtils.random(42), null)).isInstanceOf(NotSupportedContentTypeException.class);
   }
 
   private Image buildImage() {

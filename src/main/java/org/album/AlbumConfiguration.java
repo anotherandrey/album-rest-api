@@ -15,8 +15,8 @@ import org.springframework.web.servlet.config.annotation.*;
 public class AlbumConfiguration {
 
   private String parentDirs;
-  private String[] allowedOrigins;
-  private String[] allowedContentTypes;
+  private String[] origins;
+  private String[] contentTypes;
 
   @SuppressWarnings("unused")
   @Bean
@@ -27,7 +27,7 @@ public class AlbumConfiguration {
 
       @Override
       public void addCorsMappings(CorsRegistry corsRegistry) {
-        corsRegistry.addMapping(API_V1_MAPPING).allowedOrigins(allowedOrigins).allowedMethods("*");
+        corsRegistry.addMapping(API_V1_MAPPING).allowedOrigins(origins).allowedMethods("*");
       }
     };
   }

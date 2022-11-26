@@ -58,7 +58,7 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   @Transactional
   @Override
   public Image create(String filename, String contentType, Resource resource) {
-    checkContentType(contentType);
+    checkSupportedContentType(contentType);
     try (InputStream inputStream = resource.getInputStream()) {
       byte[] allBytes = inputStream.readAllBytes();
 
@@ -88,10 +88,10 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
     return new PathResource(file.getPath());
   }
 
-  private void checkContentType(String contentType) {
-    boolean isNotAllowed = !StringUtils.equalsAny(contentType, configuration.getAllowedContentTypes());
-    if (isNotAllowed) {
-      throw new NotAllowedContentTypeException(contentType);
+  private void checkSupportedContentType(String contentType) {
+    boolean isNotSupported = !StringUtils.equalsAny(contentType, configuration.getContentTypes());
+    if (isNotSupported) {
+      throw new NotSupportedContentTypeException(contentType);
     }
   }
 }
