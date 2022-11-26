@@ -15,6 +15,6 @@ public class ImageNotFoundException extends RuntimeException {
 
   @Override
   public String getMessage() {
-    return id + " is not found";
+    return "image with id " + id + ", not found";
   }
 }
