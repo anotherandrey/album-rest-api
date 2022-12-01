@@ -1,6 +1,5 @@
 package org.album.image;
 
-import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -35,10 +34,9 @@ public class ImageRepositoryTest {
         .contentLength(42L)
         .build();
 
-    image = repository.save(image);
+    repository.save(image);
 
-    List<Image> all = repository.findAllByFilename(filename);
-
-    Assertions.assertThat(all.get(0)).isEqualTo(image);
+    int count = repository.countByFilename(filename);
+    Assertions.assertThat(count).isEqualTo(1);
   }
 }

@@ -5,6 +5,7 @@ import static org.springframework.util.Base64Utils.encodeToString;
 
 import java.io.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.album.AlbumConfiguration;
 import org.album.exception.*;
 import org.album.image.Image;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0-SNAPSHOT
  */
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class AlbumCommonServiceImpl implements AlbumCommonService {
 
@@ -26,7 +28,7 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   @Transactional(readOnly = true)
   @Override
   public Response<Resource> getResource(long id) {
-    Image image = crudService.getImage(id);
+    Image image = crudService.getImageById(id);
 
     Resource resource = getPathResource(image.getFilename());
     if (!resource.exists()) {
@@ -39,7 +41,7 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   @Transactional(readOnly = true)
   @Override
   public Response<String> getBase64(long id) {
-    Image image = crudService.getImage(id);
+    Image image = crudService.getImageById(id);
 
     Resource resource = getPathResource(image.getFilename());
     if (!resource.exists()) {
@@ -77,9 +79,25 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   @Transactional
   @Override
   public void delete(long id) {
-    Image image = crudService.getImage(id);
+    Image image = crudService.deleteImageById(id);
 
-    crudService.deleteImage(image);
+    boolean filenameIsUnused = crudService.countImagesByFilename(image.getFilename()) == 0;
+    if (filenameIsUnused) {
+      Resource resource = getPathResource(image.getFilename());
+      if (resource.exists()) {
+        try {
+
+          File file = resource.getFile();
+          if (!file.delete()) {
+            log.error("can't delete file {}", file.getAbsoluteFile());
+            throw new IOException();
+          }
+
+        } catch (IOException e) {
+          throw new AlbumCommonServiceException(e);
+        }
+      }
+    }
   }
 
   private PathResource getPathResource(String filename) {

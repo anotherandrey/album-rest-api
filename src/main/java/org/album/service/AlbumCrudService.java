@@ -7,9 +7,11 @@ import org.album.image.Image;
  */
 public interface AlbumCrudService {
 
-  Image getImage(long id);
+  Image getImageById(long id);
+
+  int countImagesByFilename(String filename);
 
   Image createImage(String filename, String contentType, long contentLength);
 
-  void deleteImage(Image image);
+  Image deleteImageById(long id);
 }
