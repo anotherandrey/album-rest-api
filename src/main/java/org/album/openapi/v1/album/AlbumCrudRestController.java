@@ -22,7 +22,7 @@ public class AlbumCrudRestController implements AlbumCrudRestControllerApi {
 
     ImageDto dto = new ImageDto()
         .id(image.getId())
-        .filename(filename)
+        .filename(image.getFilename())
         .contentType(image.getContentType())
         .contentLength(image.getContentLength())
         .createdAt(image.getCreatedAt().toString());
