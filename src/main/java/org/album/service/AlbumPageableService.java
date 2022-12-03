@@ -12,7 +12,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface AlbumPageableService {
 
-  Stream<Image> getImages(
-      @Min(0) @Max(999) int page, @Min(0) @Max(999) int pageSize, String sortBy, @SortDirectionParameter String sortDirection
-  );
+  record Response(Stream<Image> items, int totalPages) {
+
+  }
+
+  Response getItems(@Min(0) @Max(999) int page, @Min(0) @Max(999) int pageSize, String sortBy, @SortDirectionParameter String sortDirection);
 }

@@ -1,7 +1,6 @@
 package org.album.service;
 
 import jakarta.validation.constraints.*;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.album.image.*;
 import org.album.service.validation.SortDirectionParameter;
@@ -20,14 +19,9 @@ public class AlbumPageableServiceImpl implements AlbumPageableService {
   private final ImageRepository repository;
 
   @Override
-  public Stream<Image> getImages(
-      @Min(0) @Max(999) int page, @Min(0) @Max(999) int pageSize, String sortBy, @SortDirectionParameter String sortDirectionString
-  ) {
-    PageRequest request = PageRequest.of(
-        page, pageSize, Sort.by(Sort.Direction.fromString(sortDirectionString), sortBy)
-    );
-
+  public Response getItems(@Min(0) @Max(999) int page, @Min(0) @Max(999) int pageSize, String sortBy, @SortDirectionParameter String sortDirectionString) {
+    PageRequest request = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(sortDirectionString), sortBy));
     Page<Image> all = repository.findAll(request);
-    return all.stream();
+    return new Response(all.stream(), all.getTotalPages());
   }
 }

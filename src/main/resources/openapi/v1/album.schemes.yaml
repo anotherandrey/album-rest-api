@@ -4,11 +4,14 @@ schemes:
     type: object
     properties:
 
+      totalPages:
+        type: integer
       items:
         type: array
         items:
           $ref: '../album.schemes.yaml#/schemes/ImageDto'
       required:
+        - totalPages
         - items
 
   ImageDto:
