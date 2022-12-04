@@ -22,7 +22,7 @@ public class AlbumBase64RestController implements AlbumBase64RestControllerApi {
     return ResponseEntity
         .ok()
         .header(HttpHeaders.CONTENT_TYPE, response.image().getContentType())
-        .header(HttpHeaders.CONTENT_LENGTH, response.image().getContentLength().toString())
+        // .header(HttpHeaders.CONTENT_LENGTH, response.image().getContentLength().toString())
         .body(response.body());
   }
 }
