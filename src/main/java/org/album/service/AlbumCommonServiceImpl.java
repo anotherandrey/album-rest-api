@@ -30,12 +30,9 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   public Response<Resource> getResource(long id) {
     Image image = crudService.getImageById(id);
 
-    Resource resource = getPathResource(image.getFilename());
-    if (!resource.exists()) {
-      throw new ResourceNotExistsException(image.getFilename());
-    }
+    String filename = image.getFilename();
 
-    return new Response<>(image, resource);
+    return new Response<>(image, getResourceUnsafe(filename));
   }
 
   @Transactional(readOnly = true)
@@ -43,12 +40,9 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   public Response<String> getBase64(long id) {
     Image image = crudService.getImageById(id);
 
-    Resource resource = getPathResource(image.getFilename());
-    if (!resource.exists()) {
-      throw new ResourceNotExistsException(image.getFilename());
-    }
+    String filename = image.getFilename();
 
-    try (InputStream inputStream = resource.getInputStream()) {
+    try (InputStream inputStream = getResourceUnsafe(filename).getInputStream()) {
       byte[] allBytes = inputStream.readAllBytes();
 
       return new Response<>(image, encodeToString(allBytes));
@@ -81,9 +75,11 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
   public void delete(long id) {
     Image image = crudService.deleteImageById(id);
 
-    boolean filenameIsUnused = crudService.countImagesByFilename(image.getFilename()) == 0;
+    String filename = image.getFilename();
+
+    boolean filenameIsUnused = crudService.countImagesByFilename(filename) == 0;
     if (filenameIsUnused) {
-      Resource resource = getPathResource(image.getFilename());
+      Resource resource = getResource(filename);
       if (resource.exists()) {
         try {
 
@@ -100,10 +96,18 @@ public class AlbumCommonServiceImpl implements AlbumCommonService {
     }
   }
 
-  private PathResource getPathResource(String filename) {
+  private Resource getResourceUnsafe(String filename) {
+    Resource resource = getResource(filename);
+    if (resource.exists()) {
+      return resource;
+    }
+    throw new ResourceNotExistsException(filename);
+  }
+
+  private Resource getResource(String filename) {
     String parentDirs = configuration.getParentDirs();
-    File file = !StringUtils.isBlank(parentDirs) ? new File(parentDirs + "/" + filename) : new File(filename);
-    return new PathResource(file.getPath());
+    String path = (!StringUtils.isBlank(parentDirs) ? new File(parentDirs + "/" + filename) : new File(filename)).getPath();
+    return new PathResource(path);
   }
 
   private void checkSupportedContentType(String contentType) {
