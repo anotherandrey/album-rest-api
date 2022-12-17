@@ -1,4 +1,4 @@
-package org.gorshkovdev.web;
+package org.gorshkovdev.openapi;
 
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @version 1.0-SNAPSHOT
  */
 @SpringBootApplication
-public class AlbumApp {
+public class OpenapiApp {
 
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(AlbumApp.class);
+    SpringApplication app = new SpringApplication(OpenapiApp.class);
 
     app.setBannerMode(Banner.Mode.OFF);
 

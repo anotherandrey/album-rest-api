@@ -7,8 +7,4 @@ pluginManagement {
 
 rootProject.name = "album-rest-api"
 
-include("db")
-include("openapi")
-include("service")
-include("service.impl")
-include("web")
+include("db", "openapi", "service", "service.impl")

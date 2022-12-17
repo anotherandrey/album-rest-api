@@ -1,4 +1,4 @@
-package org.gorshkovdev.web;
+package org.gorshkovdev.openapi;
 
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
