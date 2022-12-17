@@ -15,7 +15,11 @@ dependencies {
 }
 
 tasks {
-    withType<BootJar> {
+    named<BootJar>("bootJar") {
         enabled = false
+    }
+
+    named<Jar>("jar") {
+        enabled = true
     }
 }

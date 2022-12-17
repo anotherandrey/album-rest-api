@@ -1,12 +1,13 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("org.openapi.generator") version "6.0.0"
 }
 
 dependencies {
+    implementation(project(":db"))
     implementation(project(":service"))
+    implementation(project(":service.impl"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -29,11 +30,11 @@ tasks {
         configOptions.set(openapiConfigOptions)
     }
 
-    withType<JavaCompile> {
+    named<JavaCompile>("compileJava") {
         dependsOn(generateImagesApi)
     }
 
-    withType<BootJar> {
-        enabled = false
+    named<JavaCompile>("compileTestJava") {
+        dependsOn(generateImagesApi)
     }
 }

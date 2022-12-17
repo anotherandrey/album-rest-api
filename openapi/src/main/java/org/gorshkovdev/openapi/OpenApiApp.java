@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author gorshkovdev
  * @version 1.0-SNAPSHOT
  */
-@SpringBootApplication
-public class OpenapiApp {
+@SpringBootApplication(scanBasePackages = OpenApiApp.SCAN_BASE_PACKAGES)
+public class OpenApiApp {
+
+  final static String SCAN_BASE_PACKAGES = "org.gorshkovdev";
 
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(OpenapiApp.class);
+    SpringApplication app = new SpringApplication(OpenApiApp.class);
 
     app.setBannerMode(Banner.Mode.OFF);
 

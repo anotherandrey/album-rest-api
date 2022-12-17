@@ -3,12 +3,16 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 description = "service"
 
 dependencies {
-    implementation("org.springframework:spring-context")
+    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
 tasks {
-    withType<BootJar> {
+    named<BootJar>("bootJar") {
         enabled = false
+    }
+
+    named<Jar>("jar") {
+        enabled = true
     }
 }
