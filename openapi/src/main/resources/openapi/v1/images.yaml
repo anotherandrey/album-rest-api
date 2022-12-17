@@ -1,0 +1,146 @@
+openapi: 3.0.0
+info:
+  title: title
+  version: version
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: images-resource-rest-controller
+  - name: images-base64-rest-controller
+  - name: images-pageable-rest-controller
+  - name: images-crud-rest-controller
+paths:
+  /images/resource/{id}:
+    get:
+      operationId: getResource
+      tags:
+        - images-resource-rest-controller
+      description: |
+        get image resource
+      parameters:
+        - $ref: '../images.parameters.yaml#/parameters/id'
+      responses:
+        '200':
+          description: |
+            ok
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: |
+            can't get image resource
+        '400':
+          description: |
+            can't get image resource
+        '5XX':
+          description: |
+            can't get image resource
+  /images/base64/{id}:
+    get:
+      operationId: getBase64
+      tags:
+        - images-base64-rest-controller
+      description: |
+        get base64 image
+      parameters:
+        - $ref: '../images.parameters.yaml#/parameters/id'
+      responses:
+        '200':
+          description: |
+            ok
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: base64
+        '404':
+          description: |
+            can't get base64 image
+        '400':
+          description: |
+            can't get base64 image
+        '5XX':
+          description: |
+            can't get base64 image
+  /images:
+    get:
+      operationId: getImages
+      tags:
+        - images-pageable-rest-controller
+      description: |
+        get pageable images
+      parameters:
+        - $ref: '../images.parameters.yaml#/parameters/page'
+        - $ref: '../images.parameters.yaml#/parameters/pageSize'
+        - $ref: '../images.parameters.yaml#/parameters/sortBy'
+        - $ref: '../images.parameters.yaml#/parameters/sortDirection'
+      responses:
+        '200':
+          description: |
+            ok
+          content:
+            application/json:
+              schema:
+                $ref: '../images.schemes.yaml#/schemes/PageableImageDto'
+        '400':
+          description: |
+            can't get pageable images
+        '5XX':
+          description: |
+            can't get pageable images
+    post:
+      operationId: create
+      tags:
+        - images-crud-rest-controller
+      description: |
+        create image
+      parameters:
+        - $ref: '../images.parameters.yaml#/parameters/filename'
+        - $ref: '../images.parameters.yaml#/parameters/contentType'
+
+      # resource
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: binary
+
+      responses:
+        '200':
+          description: |
+            ok
+          content:
+            application/json:
+              schema:
+                $ref: '../images.schemes.yaml#/schemes/ImageDto'
+        '400':
+          description: |
+            can't create image
+        '5XX':
+          description: |
+            can't create image
+  /images/{id}:
+    delete:
+      operationId: delete
+      tags:
+        - images-crud-rest-controller
+      description: |
+        delete image
+      parameters:
+        - $ref: '../images.parameters.yaml#/parameters/id'
+      responses:
+        '200':
+          description: |
+            ok
+        '404':
+          description: |
+            can't delete image
+        '400':
+          description: |
+            can't delete image
+        '5XX':
+          description: |
+            can't delete image

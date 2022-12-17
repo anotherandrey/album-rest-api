@@ -1,0 +1,38 @@
+schemes:
+
+  PageableImageDto:
+    type: object
+    properties:
+
+      totalPages:
+        type: integer
+      images:
+        type: array
+        items:
+          $ref: '../images.schemes.yaml#/schemes/ImageDto'
+      required:
+        - totalPages
+        - images
+
+  ImageDto:
+    type: object
+    properties:
+
+      id:
+        type: integer
+        format: int64
+      filename:
+        type: string
+      contentType:
+        type: string
+      contentLength:
+        type: integer
+        format: int64
+      createdAt:
+        type: string
+    required:
+      - id
+      - filename
+      - contentType
+      - contentLength
+      - createdAt
