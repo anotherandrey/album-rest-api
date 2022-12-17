@@ -1,6 +1,7 @@
 .gradle
 .idea
-.openapi-generator
 build
-src/main/java/org/album/openapi/v1/album/*Api*
-src/main/java/org/album/openapi/v1/album/*Dto*
+
+/openapi/.openapi-generator
+/openapi/src/main/java/org/gorshkovdev/openapi/v1/images/*Api*
+/openapi/src/main/java/org/gorshkovdev/openapi/v1/images/*Dto*
