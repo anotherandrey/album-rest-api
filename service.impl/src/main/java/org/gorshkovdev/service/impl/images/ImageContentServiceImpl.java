@@ -1,6 +1,7 @@
 package org.gorshkovdev.service.impl.images;
 
 import java.io.*;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -24,6 +25,8 @@ public class ImageContentServiceImpl implements ImageContentService {
   private final ImagesConfiguration configuration;
   private final ImageCrudService crudService;
 
+  private final Map<String, String> base64Cache = new HashMap<>();
+
   @Override
   public ContentResponse<Resource> getResource(Long id) {
     Image image = crudService.getImageById(id);
@@ -39,12 +42,17 @@ public class ImageContentServiceImpl implements ImageContentService {
 
     String filename = image.getFilename();
 
-    try (InputStream inputStream = getResourceUnsafe(filename).getInputStream()) {
-      byte[] allBytes = inputStream.readAllBytes();
-      return new ContentResponse<>(image, Base64Utils.encodeToString(allBytes));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    String base64 = base64Cache.computeIfAbsent(filename, (key) -> {
+      try (InputStream inputStream = getResourceUnsafe(filename).getInputStream()) {
+        byte[] allBytes = inputStream.readAllBytes();
+
+        return Base64Utils.encodeToString(allBytes);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
+
+    return new ContentResponse<>(image, base64);
   }
 
   @Override
@@ -74,6 +82,9 @@ public class ImageContentServiceImpl implements ImageContentService {
 
     boolean filenameIsUnused = crudService.countImagesByFilename(filename) == 0;
     if (filenameIsUnused) {
+
+      base64Cache.remove(filename);
+
       Resource resource = getResource(filename);
       if (resource.exists()) {
         try {
