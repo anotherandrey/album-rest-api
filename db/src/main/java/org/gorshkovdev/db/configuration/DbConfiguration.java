@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(DbConfiguration.ENABLE_JPA_REPOSITORIES_VALUE)
 public class DbConfiguration {
 
-    final static String ENTITY_SCAN_VALUE = "org.gorshkovdev.db";
-    final static String ENABLE_JPA_REPOSITORIES_VALUE = "org.gorshkovdev.db";
+    public static final String ENTITY_SCAN_VALUE = "org.gorshkovdev.db";
+    public static final String ENABLE_JPA_REPOSITORIES_VALUE = "org.gorshkovdev.db";
 
 }

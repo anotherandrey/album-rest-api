@@ -5,7 +5,6 @@ import static org.springframework.data.domain.PageRequest.of;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.gorshkovdev.service.images.*;
-import org.gorshkovdev.service.validation.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,7 @@ public class ImageEntityPageableService implements ImagePageableService {
   private final ImageEntityRepository repository;
 
   @Override
-  public PageableResponse getImages(int page, int pageSize,
-                                    @SortByParam(sortByProperty = "createdAt") String sortBy,
-                                    @SortDirectionParam() String sortDirectionString) {
-
+  public PageableResponse getImages(int page, int pageSize, String sortBy, String sortDirectionString) {
     Page<ImageEntity> all = repository.findAll(of(page, pageSize, getSort(sortBy, sortDirectionString)));
 
     Stream<Image> images = all.stream().map(Image.class::cast);

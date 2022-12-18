@@ -8,8 +8,6 @@ import java.time.Instant;
  */
 public interface Image {
 
-  String FILENAME_REGEXP = "^[A-Za-z]{42}\\.[A-Za-z]{42}$";
-
   Long getId();
 
   String getFilename();

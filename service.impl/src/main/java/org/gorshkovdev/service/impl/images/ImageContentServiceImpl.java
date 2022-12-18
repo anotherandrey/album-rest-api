@@ -56,10 +56,10 @@ public class ImageContentServiceImpl implements ImageContentService {
   }
 
   @Override
-  public Image create(String filename, String contentType, Resource resource) {
+  public Image create(String filename, String contentType, Resource content) {
     checkBadContentType(contentType);
 
-    try (InputStream inputStream = resource.getInputStream()) {
+    try (InputStream inputStream = content.getInputStream()) {
       String parentDirectories = configuration.getParentDirectories();
       FileUtils.createParentDirectories(new File(parentDirectories));
 
@@ -68,7 +68,7 @@ public class ImageContentServiceImpl implements ImageContentService {
           : new File(filename);
 
       FileUtils.copyInputStreamToFile(inputStream, file);
-      return crudService.createImage(filename, contentType, resource.contentLength());
+      return crudService.createImage(filename, contentType, content.contentLength());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

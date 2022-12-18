@@ -17,8 +17,7 @@ public interface ImageContentService {
 
   ContentResponse<String> getBase64(Long id);
 
-  Image create(@Pattern(regexp = Image.FILENAME_REGEXP) String filename, String contentType,
-               Resource conte1nt);
+  Image create(String filename, String contentType, Resource content);
 
   void delete(Long id);
 }

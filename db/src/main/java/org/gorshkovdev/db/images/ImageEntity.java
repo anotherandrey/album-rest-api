@@ -15,8 +15,8 @@ import org.gorshkovdev.service.images.Image;
 @Data
 public class ImageEntity implements Image {
 
-  final static String ENTITY_NAME = "";
-  final static String TABLE_NAME = "image";
+  public static final String ENTITY_NAME = "";
+  public static final  String TABLE_NAME = "image";
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_id_sequence")

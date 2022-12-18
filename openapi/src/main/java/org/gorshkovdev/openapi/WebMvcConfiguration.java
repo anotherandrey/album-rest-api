@@ -27,7 +27,7 @@ public class WebMvcConfiguration {
   public WebMvcConfigurer webMvcConfigurer() {
     return new WebMvcConfigurer() {
 
-      private final static String API_V1_MAPPING = "/api/v1/**";
+      public static final String API_V1_MAPPING = "/api/v1/**";
 
       @Override
       public void addCorsMappings(CorsRegistry corsRegistry) {

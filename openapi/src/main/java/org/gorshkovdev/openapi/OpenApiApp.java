@@ -10,13 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = OpenApiApp.SCAN_BASE_PACKAGES)
 public class OpenApiApp {
 
-  final static String SCAN_BASE_PACKAGES = "org.gorshkovdev";
+  public static final String SCAN_BASE_PACKAGES = "org.gorshkovdev";
 
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(OpenApiApp.class);
-
     app.setBannerMode(Banner.Mode.OFF);
-
     app.run(args);
   }
 }

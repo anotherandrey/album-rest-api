@@ -1,8 +1,6 @@
 package org.gorshkovdev.service.images;
 
-import jakarta.validation.constraints.PositiveOrZero;
 import java.util.stream.Stream;
-import org.gorshkovdev.service.validation.*;
 
 /**
  * @author gorshkovdev
@@ -14,7 +12,5 @@ public interface ImagePageableService {
 
   }
 
-  PageableResponse getImages(@PositiveOrZero int page, @PositiveOrZero int pageSize,
-                             @SortByParam(sortByProperty = "createdAt") String sortBy,
-                             @SortDirectionParam String sortDirection);
+  PageableResponse getImages(int page, int pageSize, String sortBy, String sortDirection);
 }
