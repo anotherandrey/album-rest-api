@@ -18,7 +18,7 @@ dependencies {
 
 tasks {
     val openapiConfigOptions =
-            mapOf("useTags" to "true", "useSpringBoot3" to "true", "snapshotVersion" to "true", "interfaceOnly" to "true", "openApiNullable" to "false")
+            mapOf("useTags" to "true", "useSpringBoot3" to "true", "useBeanValidation" to "true", "interfaceOnly" to "true", "openApiNullable" to "false")
 
     val generateImagesApi by registering(GenerateTask::class) {
         generatorName.set("spring")

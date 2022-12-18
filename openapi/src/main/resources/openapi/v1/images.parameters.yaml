@@ -19,7 +19,6 @@ parameters:
     name: page
     schema:
       type: integer
-      default: 0
       minimum: 0
     required: true
 
@@ -28,7 +27,6 @@ parameters:
     name: pageSize
     schema:
       type: integer
-      default: 1
       minimum: 1
     required: true
 
@@ -37,8 +35,6 @@ parameters:
     name: sortBy
     schema:
       type: string
-      enum:
-        - createdAt
     required: true
 
   sortDirection:
@@ -46,9 +42,7 @@ parameters:
     name: sortDirection
     schema:
       type: string
-      enum:
-        - asc
-        - desc
+      pattern: '^(asc|desc)$'
     required: true
 
   id:
