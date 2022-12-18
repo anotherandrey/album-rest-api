@@ -1,9 +1,9 @@
 package org.gorshkovdev.openapi.v1.images;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.gorshkovdev.service.images.*;
-import org.gorshkovdev.service.images.ImagePageableService.PageableResponse;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -18,28 +18,24 @@ public class ImagesPageableRestController implements ImagesPageableRestControlle
 
   @Override
   public ResponseEntity<PageableImageDto> getImages(Integer page, Integer pageSize, String sortBy, String sortDirectionString) {
-    PageableResponse response = pageableService.getImages(page, pageSize, sortBy, sortDirectionString);
+    ImagePageableServiceResponse response = pageableService.getImages(page, pageSize, sortBy, sortDirectionString);
 
-    PageableImageDto dto = new PageableImageDto();
-    dto.totalPages(response.totalPages());
-    dto.images(response.images().map(this::mapDto).toList());
+    int totalPages = response.totalPages();
 
-    return ResponseEntity
-        .ok()
-        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-        .body(dto);
+    List<ImageDto> images = response.images()
+        .map(this::mapImageDto)
+        .toList();
+
+    PageableImageDto dto = new PageableImageDto().totalPages(totalPages).images(images);
+    return ResponseEntity.ok(dto);
   }
 
-  private ImageDto mapDto(Image image) {
-    ImageDto dto = new ImageDto()
+  private ImageDto mapImageDto(Image image) {
+    return new ImageDto()
         .id(image.getId())
         .filename(image.getFilename())
         .contentType(image.getContentType())
-        .contentLength(image.getContentLength());
-
-    String createdAt = image.getCreatedAt().toString();
-    dto.createdAt(createdAt);
-
-    return dto;
+        .contentLength(image.getContentLength())
+        .createdAt(image.getCreatedAtToString());
   }
 }

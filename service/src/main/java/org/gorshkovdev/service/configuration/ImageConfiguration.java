@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-public class ImagesConfiguration {
+public class ImageConfiguration {
 
   @Value("${images.parent-directories}")
   private String parentDirectories;

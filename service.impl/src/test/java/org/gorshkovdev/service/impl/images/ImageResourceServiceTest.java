@@ -8,10 +8,9 @@ import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.*;
-import org.gorshkovdev.service.configuration.ImagesConfiguration;
+import org.gorshkovdev.service.configuration.ImageConfiguration;
 import org.gorshkovdev.service.exception.*;
 import org.gorshkovdev.service.images.*;
-import org.gorshkovdev.service.images.ImageContentService.ContentResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +24,10 @@ import org.springframework.util.Base64Utils;
  */
 @Slf4j
 @SpringBootTest
-class ImageContentServiceTest {
+class ImageResourceServiceTest {
 
   @Autowired
-  private ImageContentService contentService;
+  private ImageResourceService resourceService;
 
   // mocks
 
@@ -36,7 +35,7 @@ class ImageContentServiceTest {
   private ImageCrudService crudService;
 
   @MockBean
-  private ImagesConfiguration configuration;
+  private ImageConfiguration configuration;
 
   @BeforeEach
   void beforeEach() {
@@ -47,7 +46,7 @@ class ImageContentServiceTest {
   void getResource_shouldGetResource() throws IOException {
     Image image = buildImage();
 
-    Long id = image.getId();
+    long id = image.getId();
     String filename = image.getFilename();
 
     doReturn(image).when(crudService).getImageById(id);
@@ -58,8 +57,8 @@ class ImageContentServiceTest {
 
     String path = file.getPath();
 
-    ContentResponse<Resource> expected = new ContentResponse<>(image, new PathResource(path));
-    assertThat(contentService.getResource(id)).isEqualTo(expected);
+    ImageResourceServiceResponse<Resource> expected = new ImageResourceServiceResponse<>(image, new PathResource(path));
+    assertThat(resourceService.getResource(id)).isEqualTo(expected);
 
     deleteFile(file);
   }
@@ -68,21 +67,21 @@ class ImageContentServiceTest {
   void getResource_shouldThrowsResourceNotExistsException() {
     Image image = buildImage();
 
-    Long id = image.getId();
+    long id = image.getId();
 
     doReturn(image).when(crudService).getImageById(id);
 
-    assertThatThrownBy(() -> contentService.getResource(id))
+    assertThatThrownBy(() -> resourceService.getResource(id))
         .isInstanceOf(ResourceNotExistsException.class);
   }
 
   @Test
   void getResource_shouldThrowsImageNotFoundException() {
-    Long id = 42L;
+    long id = 42L;
 
     doThrow(ImageNotFoundException.class).when(crudService).getImageById(id);
 
-    assertThatThrownBy(() -> contentService.getResource(id))
+    assertThatThrownBy(() -> resourceService.getResource(id))
         .isInstanceOf(ImageNotFoundException.class);
   }
 
@@ -90,7 +89,7 @@ class ImageContentServiceTest {
   void getBase46_shouldGetBase64() throws IOException {
     Image image = buildImage();
 
-    Long id = image.getId();
+    long id = image.getId();
     String filename = image.getFilename();
 
     doReturn(image).when(crudService).getImageById(id);
@@ -99,9 +98,9 @@ class ImageContentServiceTest {
     File file = new File(filename);
     FileUtils.writeByteArrayToFile(file, byteArray);
 
-    ContentResponse<String> expected = new ContentResponse<>(image,
+    ImageResourceServiceResponse<String> expected = new ImageResourceServiceResponse<>(image,
         Base64Utils.encodeToString(byteArray));
-    assertThat(contentService.getBase64(id)).isEqualTo(expected);
+    assertThat(resourceService.getBase64(id)).isEqualTo(expected);
 
     deleteFile(file);
   }
@@ -110,21 +109,21 @@ class ImageContentServiceTest {
   void getBase64_shouldThrowsResourceNotExistsException() {
     Image image = buildImage();
 
-    Long id = image.getId();
+    long id = image.getId();
 
     doReturn(image).when(crudService).getImageById(id);
 
-    assertThatThrownBy(() -> contentService.getResource(id))
+    assertThatThrownBy(() -> resourceService.getResource(id))
         .isInstanceOf(ResourceNotExistsException.class);
   }
 
   @Test
   void getBase64_shouldThrowsImageNotFoundException() {
-    Long id = 42L;
+    long id = 42L;
 
     doThrow(ImageNotFoundException.class).when(crudService).getImageById(id);
 
-    assertThatThrownBy(() -> contentService.getResource(id))
+    assertThatThrownBy(() -> resourceService.getResource(id))
         .isInstanceOf(ImageNotFoundException.class);
   }
 
@@ -144,9 +143,9 @@ class ImageContentServiceTest {
     doReturn(mockInputStream).when(mockResource).getInputStream();
 
     doReturn(new String[]{image.getContentType()}).when(configuration).getContentTypes();
-    doReturn(image).when(crudService).createImage(anyString(), anyString(), any(Long.class));
+    doReturn(image).when(crudService).createImage(anyString(), anyString(), any(long.class));
 
-    assertThat(contentService.create(filename, contentType, mockResource)).isEqualTo(image);
+    assertThat(resourceService.create(filename, contentType, mockResource)).isEqualTo(image);
 
     File file = new File(filename);
     try (FileInputStream inputStream = new FileInputStream(file)) {
@@ -164,7 +163,7 @@ class ImageContentServiceTest {
   void delete_shouldNotDeleteFileIfFilenameIsUsed() throws IOException {
     Image image = buildImage();
 
-    Long id = image.getId();
+    long id = image.getId();
     String filename = image.getFilename();
 
     doReturn(image).when(crudService).deleteImageById(id);
@@ -174,7 +173,7 @@ class ImageContentServiceTest {
     File file = new File(filename);
     FileUtils.writeByteArrayToFile(file, byteArray);
 
-    contentService.delete(id);
+    resourceService.delete(id);
 
     assertThat(file.exists()).isTrue();
 
@@ -185,7 +184,7 @@ class ImageContentServiceTest {
   void delete_shouldDeleteFileIfFilenameIsUnused() throws IOException {
     Image image = buildImage();
 
-    Long id = image.getId();
+    long id = image.getId();
     String filename = image.getFilename();
 
     doReturn(image).when(crudService).deleteImageById(id);
@@ -195,7 +194,7 @@ class ImageContentServiceTest {
     File file = new File(filename);
     FileUtils.writeByteArrayToFile(file, byteArray);
 
-    contentService.delete(id);
+    resourceService.delete(id);
 
     assertThat(file.exists()).isFalse();
   }
@@ -226,6 +225,11 @@ class ImageContentServiceTest {
       @Override
       public Instant getCreatedAt() {
         return Instant.now();
+      }
+
+      @Override
+      public String getCreatedAtToString() {
+        return Instant.now().toString();
       }
     };
   }

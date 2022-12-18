@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.gorshkovdev.service.configuration.ImagesConfiguration;
+import org.gorshkovdev.service.configuration.ImageConfiguration;
 import org.gorshkovdev.service.exception.*;
 import org.gorshkovdev.service.images.*;
 import org.springframework.core.io.*;
@@ -20,24 +20,24 @@ import org.springframework.util.Base64Utils;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class ImageContentServiceImpl implements ImageContentService {
+public class ImageResourceServiceImpl implements ImageResourceService {
 
-  private final ImagesConfiguration configuration;
+  private final ImageConfiguration configuration;
   private final ImageCrudService crudService;
 
   private final Map<String, String> base64Cache = new HashMap<>();
 
   @Override
-  public ContentResponse<Resource> getResource(Long id) {
+  public ImageResourceServiceResponse<Resource> getResource(long id) {
     Image image = crudService.getImageById(id);
 
     String filename = image.getFilename();
 
-    return new ContentResponse<>(image, getResourceUnsafe(filename));
+    return new ImageResourceServiceResponse<>(image, getResourceUnsafe(filename));
   }
 
   @Override
-  public ContentResponse<String> getBase64(Long id) {
+  public ImageResourceServiceResponse<String> getBase64(long id) {
     Image image = crudService.getImageById(id);
 
     String filename = image.getFilename();
@@ -52,14 +52,14 @@ public class ImageContentServiceImpl implements ImageContentService {
       }
     });
 
-    return new ContentResponse<>(image, base64);
+    return new ImageResourceServiceResponse<>(image, base64);
   }
 
   @Override
-  public Image create(String filename, String contentType, Resource content) {
+  public Image create(String filename, String contentType, Resource body) {
     checkBadContentType(contentType);
 
-    try (InputStream inputStream = content.getInputStream()) {
+    try (InputStream inputStream = body.getInputStream()) {
       String parentDirectories = configuration.getParentDirectories();
       FileUtils.createParentDirectories(new File(parentDirectories));
 
@@ -68,14 +68,14 @@ public class ImageContentServiceImpl implements ImageContentService {
           : new File(filename);
 
       FileUtils.copyInputStreamToFile(inputStream, file);
-      return crudService.createImage(filename, contentType, content.contentLength());
+      return crudService.createImage(filename, contentType, body.contentLength());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(long id) {
     Image image = crudService.deleteImageById(id);
 
     String filename = image.getFilename();
@@ -114,11 +114,11 @@ public class ImageContentServiceImpl implements ImageContentService {
   private Resource getResource(String filename) {
     String parentDirectories = configuration.getParentDirectories();
 
-    String path = (!StringUtils.isBlank(parentDirectories)
+    File file = !StringUtils.isBlank(parentDirectories)
         ? new File(parentDirectories + "/" + filename)
-        : new File(filename)).getPath();
+        : new File(filename);
 
-    return new PathResource(path);
+    return new PathResource(file.getPath());
   }
 
   private void checkBadContentType(String contentType) {

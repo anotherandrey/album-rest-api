@@ -37,4 +37,9 @@ public class ImageEntity implements Image {
 
   public ImageEntity() {
   }
+
+  @Override
+  public String getCreatedAtToString() {
+    return getCreatedAt().toString();
+  }
 }

@@ -17,4 +17,6 @@ public interface Image {
   Long getContentLength();
 
   Instant getCreatedAt();
+
+  String getCreatedAtToString();
 }
